@@ -1,0 +1,19 @@
+* {
+    background-color: #B6CB34;
+    color: #302285;
+}
+
+header {
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    justify-content: center;
+    display: flex;
+}
+
+div {
+    justify-content: center;
+}
+
+.btn {
+    background-color: #302285;
+    color: #ffffff;
+}
