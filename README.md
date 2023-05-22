@@ -16,10 +16,10 @@ This application is a weather dashboard that allows users to view weather condit
 
 The following animation shows the web application's appearance and functionality:
 
-![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions.](./Assets/06-server-side-apis-homework-demo.png)
+![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions.](assets/images/weather-dashboard.gif)
 
 ## Deployment
 
-The application is deployed at:
+The application is deployed at: https://kirstynrowen.github.io/weather-dashboard/
 
 ---
