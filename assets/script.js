@@ -16,6 +16,7 @@ const today = dayjs().format("dddd, YYYY-MM-DD");
 const searchBtn = document.getElementById('searchBtn');
 const searchHistoryEl = document.getElementById('history');
 const forecastEl = document.getElementById('forecast');
+const currentEl = document.getElementById('current');
 
 const searchHistArr = [];
 
@@ -44,8 +45,50 @@ searchBtn.addEventListener('click', function(){
     
     displaySearchHistory();
     
-    
-    
+    fetch(
+        'https://api.openweathermap.org/data/2.5/weather?q=' + cityInput + ',' + stateInput + ',US' + '&appid=' + apiKey + '&units=imperial'
+    )
+    .then((res) => res.json())
+    .then((data) => {
+        if (data.cod === '404') {
+            document.getElementById('error').textContent = 'Error: City not found. Please try again.';
+            return;
+        }
+       //display current weather
+       let todayEl = document.createElement('div');
+       todayEl.classList.add('col');
+       currentEl.append(todayEl);
+
+       let cardDivEl = document.createElement('div');
+       cardDivEl.classList.add('card');
+       cardDivEl.style.width = '14rem';
+       todayEl.append(cardDivEl);
+       
+       let dateHeader = document.createElement('h5');
+       dateHeader.classList.add('card-title');
+       dateHeader.textContent = today;
+       cardDivEl.append(dateHeader);
+       
+       let weatherInfo = document.createElement('ul');
+       weatherInfo.classList.add('list-group', 'list-group-flush');
+       cardDivEl.append(weatherInfo);
+
+       let tempEl = document.createElement('li');
+       tempEl.classList.add('list-group-item');
+       tempEl.textContent = `Temperature: ${data.main.temp} °F`;
+       weatherInfo.append(tempEl);
+
+       let humidityEl = document.createElement('li');
+       humidityEl.classList.add('list-group-item');
+       humidityEl.textContent = `Humidity: ${data.main.humidity}%`;
+       weatherInfo.append(humidityEl);
+
+       let windEl = document.createElement('li');
+       windEl.classList.add('list-group-item');
+       windEl.textContent = `Wind Speed: ${data.wind.speed} MPH`;
+
+       //fetch forecast
+    })   
 
 })
 
