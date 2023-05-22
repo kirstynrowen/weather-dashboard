@@ -19,15 +19,18 @@
         <div class="row">
             <div class="col-5">
                 <h4>Search for a city:</h4>
-                <form>
-                    <div class="mb-3">
+                    <div class="mb-3 input-group" >
                       <input type="text" class="form-control" id="city-input" placeholder="City Name" />
+                      <input type="text" class="form-control" maxlength="2" id="state-input" placeholder="State Abbreviation e.g., AZ" />
                     </div>
-                    <button type="submit" class="btn">Search</button>
-                </form>
+                    <button type="submit" class="btn" id="searchBtn">Search</button>
+                    <p id="error"></p>
             </div>
             <div class="col-5">
                 <h4>Previously searched:</h4>
+                <div id="history">
+
+                </div>
             </div>
 
         </div>
@@ -36,26 +39,28 @@
                 &nbsp;
             </div>
         </div>
-
-        <div class="row">
+        <div class="row justify-content-start" id="forecast">
+            <!--I want to dynamically create this col div with js and populate weather info from api-->
             <div class="col">
-                Column
-            </div>
-            <div class="col">
-                Column
-            </div>
-            <div class="col">
-                Column
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" id="icon">
+                    <div class="card-body">
+                        <h5 class="card-title" id="date"></h5>
+                        <p class="card-text" id="city-name"></p>
+                      </div>
+                      <ul class="list-group list-group-flush" id="weather-info">
+                        <li class="list-group-item" id="temp"></li>
+                        <li class="list-group-item" id="humidity"></li>
+                        <li class="list-group-item" id="wind"></li>
+                      </ul>             
+                </div>
             </div>
         </div>
     </div>
         <!--Use day.js for date formatting-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
-      integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wafzuy76x7U="
-      crossorigin="anonymous"
-    ></script>
+      src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"></script>
     <script src="assets/script.js"></script>
 </body>
 </html>

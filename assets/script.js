@@ -10,3 +10,42 @@
 
 //store weather API key in variable
 const apiKey = 'da661090c07b3801270d73c03cca3668';
+//store day.js if needed?
+const today = dayjs().format("dddd, YYYY-MM-DD");
+//target DOM elements
+const searchBtn = document.getElementById('searchBtn');
+const searchHistoryEl = document.getElementById('history');
+const forecastEl = document.getElementById('forecast');
+
+const searchHistArr = [];
+
+//function to render search history to page
+function displaySearchHistory() {
+    // Clear element contents
+    searchHistoryEl.innerHTML = '';
+    // Retrieve the search history from local storage
+    const savedSearches = JSON.parse(localStorage.getItem('search-history')) || [];
+    for (let i = 0; i < savedSearches.length; i++) {
+        const prevSearchBtn = document.createElement('button');
+        prevSearchBtn.setAttribute('type', 'button');
+        prevSearchBtn.classList.add('btn');
+        prevSearchBtn.textContent = savedSearches[i];
+        searchHistoryEl.append(prevSearchBtn);
+    }
+}
+
+searchBtn.addEventListener('click', function(){
+    const cityInput = document.getElementById('city-input').value;
+    const stateInput = document.getElementById('state-input').value;
+    const newSearch = cityInput + ', ' + stateInput;
+    console.log(newSearch);
+    searchHistArr.push(newSearch);
+    localStorage.setItem('search-history', JSON.stringify(searchHistArr));
+    
+    displaySearchHistory();
+    
+    
+    
+
+})
+
