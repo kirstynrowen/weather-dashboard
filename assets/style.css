@@ -11,9 +11,14 @@ header {
 
 div {
     justify-content: center;
+    justify-items: center;
 }
 
 .btn {
     background-color: #302285;
     color: #ffffff
+}
+
+.card-title, .card-text {
+    color: #302285;
 }

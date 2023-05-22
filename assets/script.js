@@ -11,7 +11,7 @@
 //store weather API key in variable
 const apiKey = 'da661090c07b3801270d73c03cca3668';
 //store day.js if needed?
-const today = dayjs().format("dddd, YYYY-MM-DD");
+const today = dayjs().format('dddd, DD-MM-YYYY');
 //target DOM elements
 const searchBtn = document.getElementById('searchBtn');
 const searchHistoryEl = document.getElementById('history');
@@ -32,10 +32,13 @@ function displaySearchHistory() {
         prevSearchBtn.classList.add('btn');
         prevSearchBtn.textContent = savedSearches[i];
         searchHistoryEl.append(prevSearchBtn);
+        
     }
 }
 
-searchBtn.addEventListener('click', function(){
+searchBtn.addEventListener('click', fetchWeather);
+
+function fetchWeather() {
     const cityInput = document.getElementById('city-input').value;
     const stateInput = document.getElementById('state-input').value;
     const newSearch = cityInput + ', ' + stateInput;
@@ -55,6 +58,8 @@ searchBtn.addEventListener('click', function(){
             return;
         }
        //display current weather
+        currentEl.innerHTML = '';
+
        let todayEl = document.createElement('div');
        todayEl.classList.add('col');
        currentEl.append(todayEl);
@@ -63,11 +68,20 @@ searchBtn.addEventListener('click', function(){
        cardDivEl.classList.add('card');
        cardDivEl.style.width = '14rem';
        todayEl.append(cardDivEl);
+
+       let cardBodyEl = document.createElement('div');
+       cardBodyEl.classList.add('card-body');
+       cardDivEl.append(cardBodyEl);
        
        let dateHeader = document.createElement('h5');
        dateHeader.classList.add('card-title');
-       dateHeader.textContent = today;
-       cardDivEl.append(dateHeader);
+       dateHeader.textContent = dayjs.unix(data.dt).format('dddd, DD-MM-YYYY');
+       cardBodyEl.append(dateHeader);
+
+       let cityHeader = document.createElement('p');
+       dateHeader.classList.add('card-text');
+       dateHeader.textContent = `Today's weather in ${data.name}:`;
+       cardBodyEl.append(cityHeader);
        
        let weatherInfo = document.createElement('ul');
        weatherInfo.classList.add('list-group', 'list-group-flush');
@@ -75,7 +89,7 @@ searchBtn.addEventListener('click', function(){
 
        let tempEl = document.createElement('li');
        tempEl.classList.add('list-group-item');
-       tempEl.textContent = `Temperature: ${data.main.temp} °F`;
+       tempEl.textContent = `Temperature: ${data.main.temp.toFixed(0)} °F`;
        weatherInfo.append(tempEl);
 
        let humidityEl = document.createElement('li');
@@ -86,9 +100,75 @@ searchBtn.addEventListener('click', function(){
        let windEl = document.createElement('li');
        windEl.classList.add('list-group-item');
        windEl.textContent = `Wind Speed: ${data.wind.speed} MPH`;
+       weatherInfo.append(windEl);
 
-       //fetch forecast
+       fetch(
+        'https://api.openweathermap.org/data/2.5/forecast?q=' + cityInput + ',' + stateInput + ',US' + '&appid=' + apiKey + '&units=imperial'
+    )
+    .then((res) => res.json())
+    .then((data) => {
+       //display forecast
+        forecastEl.innerHTML = '';
+        for (let i = 0; i < data.list.length; i+=8) {
+            const forecastDay = data.list[i];
+
+            let todayEl = document.createElement('div');
+            todayEl.classList.add('col');
+            forecastEl.append(todayEl);
+     
+            let cardDivEl = document.createElement('div');
+            cardDivEl.classList.add('card');
+            cardDivEl.style.width = '14rem';
+            todayEl.append(cardDivEl);
+
+            let cardBodyEl = document.createElement('div');
+            cardBodyEl.classList.add('card-body');
+            cardDivEl.append(cardBodyEl);
+            
+            let iconEl = document.createElement("img");
+            iconEl.setAttribute(
+              'src',
+              'http://openweathermap.org/img/w/'+ forecastDay.weather[0].icon + '.png'
+            );
+            iconEl.setAttribute(
+                'style',
+                'width: 50px; max-width:100%;'+ forecastDay.weather[0].icon + '.png'
+              );
+            iconEl.classList.add('card-img-top');
+            cardBodyEl.append(iconEl);
+     
+            let dateHeader = document.createElement('p');
+            dateHeader.classList.add('card-text');
+            dateHeader.textContent = dayjs.unix(forecastDay.dt).format('dddd, MM-DD-YYYY');
+            cardBodyEl.append(dateHeader);
+
+            let weatherInfo = document.createElement('ul');
+            weatherInfo.classList.add('list-group', 'list-group-flush');
+            cardDivEl.append(weatherInfo);
+     
+            let tempEl = document.createElement('li');
+            tempEl.classList.add('list-group-item');
+            tempEl.textContent = `Temperature: ${forecastDay.main.temp.toFixed(0)} °F`;
+            weatherInfo.append(tempEl);
+     
+            let humidityEl = document.createElement('li');
+            humidityEl.classList.add('list-group-item');
+            humidityEl.textContent = `Humidity: ${forecastDay.main.humidity}%`;
+            weatherInfo.append(humidityEl);
+     
+            let windEl = document.createElement('li');
+            windEl.classList.add('list-group-item');
+            windEl.textContent = `Wind Speed: ${forecastDay.wind.speed} MPH`;
+            weatherInfo.append(windEl);
+            
+        }
+
     })   
 
-})
+    })   
+    
+    //fetch forecast
+
+
+}
 
