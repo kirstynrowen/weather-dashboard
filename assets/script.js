@@ -1,7 +1,7 @@
 //store weather API key in variable
 const apiKey = 'da661090c07b3801270d73c03cca3668';
 //store day.js if needed?
-const today = dayjs().format('dddd, DD-MM-YYYY');
+const today = dayjs().format('dddd, MM-DD-YYYY');
 //target DOM elements
 const searchBtn = document.getElementById('searchBtn');
 const searchHistoryEl = document.getElementById('history');
@@ -9,6 +9,38 @@ const forecastEl = document.getElementById('forecast');
 const currentEl = document.getElementById('current');
 
 const searchHistArr = [];
+
+searchBtn.addEventListener('click', function () {
+    const cityInput = document.getElementById('city-input').value;
+    const stateInput = document.getElementById('state-input').value;
+    const searchValue = cityInput + ', ' + stateInput;
+    fetchWeather(searchValue);
+    displaySearchHistory();
+  });
+
+//function to render search history to page
+function displaySearchHistory() {
+    // Clear element contents
+    searchHistoryEl.innerHTML = '';
+    // Retrieve the search history from local storage
+    const savedSearches = JSON.parse(localStorage.getItem('search-history'));
+    for (let i = 0; i < savedSearches.length; i++) {
+        const prevSearchBtn = document.createElement('button');
+        prevSearchBtn.setAttribute('type', 'button');
+        prevSearchBtn.classList.add('btn', 'btn-prev');
+        prevSearchBtn.textContent = savedSearches[i];
+        prevSearchBtn.setAttribute('search', savedSearches[i]);
+        
+        prevSearchBtn.addEventListener('click', function () {
+            const searchValue = this.getAttribute('search');
+            fetchWeather(searchValue);
+          });
+        
+        searchHistoryEl.append(prevSearchBtn);
+    }
+}
+
+// displaySearchHistory();
 
 function fetchWeather(searchValue) {
     const [cityInput, stateInput] = searchValue.split(',');
@@ -45,7 +77,7 @@ function fetchWeather(searchValue) {
        
        let dateHeader = document.createElement('h5');
        dateHeader.classList.add('card-title');
-       dateHeader.textContent = dayjs.unix(data.dt).format('dddd, DD-MM-YYYY');
+       dateHeader.textContent = dayjs.unix(data.dt).format('dddd, MM-DD-YYYY');
        cardBodyEl.append(dateHeader);
 
        let cityHeader = document.createElement('p');
@@ -138,33 +170,5 @@ function fetchWeather(searchValue) {
     });   
 };
 
-//function to render search history to page
-function displaySearchHistory() {
-    // Clear element contents
-    searchHistoryEl.innerHTML = '';
-    // Retrieve the search history from local storage
-    const savedSearches = JSON.parse(localStorage.getItem('search-history'));
-    for (let i = 0; i < savedSearches.length; i++) {
-        const prevSearchBtn = document.createElement('button');
-        prevSearchBtn.setAttribute('type', 'button');
-        prevSearchBtn.classList.add('btn', 'btn-prev');
-        prevSearchBtn.textContent = savedSearches[i];
-        prevSearchBtn.setAttribute('search', savedSearches[i]);
-        
-        prevSearchBtn.addEventListener('click', function () {
-            const searchValue = this.getAttribute('search');
-            fetchWeather(searchValue);
-          });
-        
-        searchHistoryEl.append(prevSearchBtn);
-    }
-}
 
-displaySearchHistory();
 
-searchBtn.addEventListener('click', function () {
-    const cityInput = document.getElementById('city-input').value;
-    const stateInput = document.getElementById('state-input').value;
-    const searchValue = cityInput + ', ' + stateInput;
-    fetchWeather(searchValue);
-  });
